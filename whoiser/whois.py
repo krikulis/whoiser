@@ -21,5 +21,5 @@ class WhoisQuery(object):
             response.append(data)
         self._close_connection()
         response = ''.join(response)
-        return  self.parse_response(response)
+        return self.parse_response(response)
 
