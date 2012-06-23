@@ -1,4 +1,4 @@
-import iana
+from servers import iana
 import urllib
 
 __IANA_TLD_LIST = 'http://data.iana.org/TLD/tlds-alpha-by-domain.txt' 
@@ -19,7 +19,6 @@ def get_whois_list():
         print "getting info for %s " % (tld)
         response = query.query(tld)
         if 'whois' in response:
-            whois_servers.append((tld, response['whois']))
+            yield (tld, response['whois'])
         else:
-            whois_servers.append((tld, None))
-    return whois_servers
+            yield (tld, None)

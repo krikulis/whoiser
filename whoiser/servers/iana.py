@@ -1,4 +1,4 @@
-from whois import WhoisQuery
+from servers.generic import WhoisQuery
 
 class IanaWhoisQuery(WhoisQuery):
     server = 'whois.iana.org'
