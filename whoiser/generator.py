@@ -1,16 +1,18 @@
 import os 
 from tld import get_whois_list
 from string import Template
+from utils import make_py_filename 
+from utils import make_py_namespace
 WHOIS_INTERFACE = """ #TODO: write implementation
-from servers.generic import WhoisQuery
-class WhoisQuery(WhoisQuery):
+from servers.generic import GenericWhoisQuery
+class WhoisQuery(GenericWhoisQuery):
     server = '${server}'
     def parse_response(self, response):
         return response
 """
 NO_WHOIS_INTERFACE = """
-from servers.generic import WhoisQuery
-class WhoisQuery(WhoisQuery):
+from servers.generic import GenericWhoisQuery
+class WhoisQuery(GenericWhoisQuery):
     def query(self, query):
         raise NotImplementedError(u"TLD $tld has no Whois server available")
 """
@@ -25,7 +27,7 @@ def get_implementation(tld, server):
         return NO_WHOIS_TEMPLATE.substitute(tld = tld)
 def write_implementation(tld, code):
     filename = os.path.join(MY_ROOT, 'servers')
-    filename = os.path.join(filename, '%s.py' % tld)
+    filename = os.path.join(filename, make_py_filename(tld))
     print filename 
     f = open(filename, "w+")
     f.write(code)
@@ -34,8 +36,10 @@ def write_tld_list(tld_list):
     imports = []
     code = [u"TLD_LIST = ["]
     for tld in tld_list:
-        code.append('("%s", %s.WhoisQuery)' % (tld,tld))
-        imports.append(u"from servers import %s" % tld)
+        code.append('("%s", %s.WhoisQuery),' % (tld,make_py_namespace(tld)))
+        imports.append(u"from servers import %s" % make_py_namespace(tld))
+    code.append("]")
+    imports.append("\n\n")
     code = u"\n".join(code)
     imports = u"\n".join(imports)
     filename = os.path.join(MY_ROOT, 'servers')
