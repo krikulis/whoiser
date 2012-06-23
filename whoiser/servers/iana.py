@@ -1,6 +1,6 @@
-from servers.generic import WhoisQuery
+from servers.generic import GenericWhoisQuery
 
-class IanaWhoisQuery(WhoisQuery):
+class WhoisQuery(GenericWhoisQuery):
     server = 'whois.iana.org'
     def parse_response(self,data):
         data = data.split("\n")

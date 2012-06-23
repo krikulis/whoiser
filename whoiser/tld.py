@@ -13,7 +13,7 @@ def get_tld_list():
     return tld_list
 
 def get_whois_list():
-    query = iana.IanaWhoisQuery()
+    query = iana.WhoisQuery()
     whois_servers = []
     for tld in get_tld_list():
         print "getting info for %s " % (tld)

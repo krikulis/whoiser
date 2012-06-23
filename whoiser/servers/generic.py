@@ -1,7 +1,8 @@
+
 ''' Whois server abstractions '''
 import socket
 
-class WhoisQuery(object):
+class GenericWhoisQuery(object):
     server = None 
     port = 43
     def _open_connection(self):
