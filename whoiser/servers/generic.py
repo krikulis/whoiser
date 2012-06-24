@@ -5,6 +5,7 @@ import socket
 class GenericWhoisQuery(object):
     server = None 
     port = 43
+    line_seperator = "\r\n"
     def _open_connection(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((self.server, self.port))
@@ -12,8 +13,7 @@ class GenericWhoisQuery(object):
         self.socket.close()
     def query(self, query):
         self._open_connection()
-        
-        self.socket.send("%s\n" % query)
+        self.socket.send("%s%s" % (query, self.line_seperator))
         response = [] 
         while True:
             data = self.socket.recv(1024)
