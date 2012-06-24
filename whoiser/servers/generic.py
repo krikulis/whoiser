@@ -8,6 +8,7 @@ class GenericWhoisQuery(object):
     port = 43
     line_seperator = "\r\n"
     unavailable_key = ""
+    prefix = ""
     def _open_connection(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((self.server, self.port))
@@ -25,6 +26,8 @@ class GenericWhoisQuery(object):
         self._close_connection()
         response = ''.join(response)
         self.raw_response = response
+        if response.startswith(self.prefix):
+            response = response[len(self.prefix):]
         response = string_to_dict(response, line_seperator = self.line_seperator)
         self.check_available(response)
         return self.parse_response(response)
