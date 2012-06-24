@@ -1,11 +1,13 @@
 
 ''' Whois server abstractions '''
 import socket
+from utils import string_to_dict 
 
 class GenericWhoisQuery(object):
     server = None 
     port = 43
     line_seperator = "\r\n"
+    unavailable_key = ""
     def _open_connection(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((self.server, self.port))
@@ -22,5 +24,14 @@ class GenericWhoisQuery(object):
             response.append(data)
         self._close_connection()
         response = ''.join(response)
+        self.raw_response = response
+        response = string_to_dict(response, line_seperator = self.line_seperator)
+        self.check_available(response)
         return self.parse_response(response)
-
+    def check_available(self, response):
+        if self.unavailable_key == "":
+            return 
+        if self.unavailable_key in response:
+            self.available = False
+        else:
+            self.available = True

@@ -2,10 +2,11 @@
 from servers.generic import GenericWhoisQuery
 class WhoisQuery(GenericWhoisQuery):
     server = 'whois.nic.ac'
+    unavailable_key = "Not available"
     def parse_response(self, response):
-        """ .ac whois registry only contains information about domain availability """
-        if 'Not available' in response:
-            available = False
+        return response
+    def check_available(self, response):
+        if self.unavailable_key in self.raw_response:
+            self.available = False
         else:
-            available = True
-        return {'available' : available}
+            self.available = True
